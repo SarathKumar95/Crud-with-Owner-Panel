@@ -1,8 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.cache import cache_control
+
 from accounts.forms import CustomUserForm
 from accounts.models import CustomUser
 
@@ -10,7 +13,6 @@ from accounts.models import CustomUser
 # Create your views here.
 
 def register(req):
-
     if 'superu' in req.session:
         return redirect(owner_home)
 
@@ -37,7 +39,6 @@ def register(req):
 
 
 def login_view(req):
-
     if 'superu' in req.session:
         return redirect('owner')
 
@@ -57,10 +58,12 @@ def login_view(req):
     return render(req, 'registration/login.html')
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def user_home(req):
     return render(req, 'accounts/home.html')
 
 
+@cache_control(no_cache=True, must_revalidate=True)
 def owner_home(req):
     if 'superu' in req.session:
         user = CustomUser.objects.all()
@@ -68,9 +71,10 @@ def owner_home(req):
         return render(req, 'accounts/owner.html', context)
 
     elif req.user is not None:
-        return redirect('customer')
+        return redirect(user_home)
 
-    return redirect(login_view)
+    else:
+        return redirect(login_view)
 
 
 def sign_out(req):
@@ -78,13 +82,13 @@ def sign_out(req):
         req.session.flush()
     return redirect('login')
 
-
+@login_required()
 def delete_view(req, id):
     user = CustomUser.objects.get(id=id)
     user.delete()
     return redirect('owner')
 
-
+@login_required()
 def update_view(req, id):
     user = CustomUser.objects.get(id=id)
     form = CustomUserForm(instance=user)
@@ -99,6 +103,7 @@ def update_view(req, id):
     return render(req, 'accounts/edit.html', context)
 
 
+@login_required()
 def create_user(req):
     form = CustomUserForm()
     context = {'form': form}
@@ -114,7 +119,7 @@ def create_user(req):
             print(form.errors)
     return render(req, 'accounts/create.html', context)
 
-
+@login_required()
 def search_user(req):
     if req.method == 'POST':
         searched = req.POST['searched']
