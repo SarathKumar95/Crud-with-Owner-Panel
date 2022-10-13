@@ -16,6 +16,9 @@ def register(req):
     if 'superu' in req.session:
         return redirect(owner_home)
 
+    if 'customer' in req.session:
+        return redirect(user_home)
+
     form = CustomUserForm()
     context = {"form": form}
 
@@ -42,6 +45,9 @@ def login_view(req):
     if 'superu' in req.session:
         return redirect('owner')
 
+    if 'customer' in req.session:
+        return redirect('customer')
+
     if req.method == 'POST':
         u_name = req.POST['username']
         pwd = req.POST['password']
@@ -53,17 +59,21 @@ def login_view(req):
             return redirect(owner_home)
 
         elif user is not None:
+            req.session['customer'] = u_name
             return redirect(user_home)
 
     return render(req, 'registration/login.html')
 
 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def user_home(req):
-    return render(req, 'accounts/home.html')
+    if 'customer' in req.session:
+        return render(req, 'accounts/home.html')
+
+    else:
+        return redirect(login_view)
 
 
-@cache_control(no_cache=True, must_revalidate=True)
+
 def owner_home(req):
     if 'superu' in req.session:
         user = CustomUser.objects.all()
@@ -80,15 +90,19 @@ def owner_home(req):
 def sign_out(req):
     if 'superu' in req.session:
         req.session.flush()
+
+    elif 'customer' in req.session:
+        req.session.flush()
+
     return redirect('login')
 
-@login_required()
+
 def delete_view(req, id):
     user = CustomUser.objects.get(id=id)
     user.delete()
     return redirect('owner')
 
-@login_required()
+
 def update_view(req, id):
     user = CustomUser.objects.get(id=id)
     form = CustomUserForm(instance=user)
@@ -103,7 +117,7 @@ def update_view(req, id):
     return render(req, 'accounts/edit.html', context)
 
 
-@login_required()
+
 def create_user(req):
     form = CustomUserForm()
     context = {'form': form}
@@ -119,7 +133,7 @@ def create_user(req):
             print(form.errors)
     return render(req, 'accounts/create.html', context)
 
-@login_required()
+
 def search_user(req):
     if req.method == 'POST':
         searched = req.POST['searched']
