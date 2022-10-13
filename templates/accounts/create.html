@@ -1,0 +1,66 @@
+{% extends 'accounts/base.html'  %}
+
+{% block content %} 
+
+<div class="container d-flex justify-content-between align-content-center">
+
+    <div class="form-div">
+
+            <form action="" method="POST" class="mt-5 ms-3">
+
+                {% csrf_token %}
+                
+                <div class="mb-3 ms-5">
+                    <label>Firstname : </label> {{form.first_name}}
+                </div>
+                
+                <div class="mb-3 ms-5">
+                    <label>Username : </label> {{form.username}}
+                </div>
+
+                <div class="mb-3 ms-5 ps-3">
+                    <label>Email Id : </label> {{form.email}}
+                </div>
+
+                <div class="mb-3 ms-5 ps-3">
+                    <label>Password: </label> {{form.password1}}
+                </div>
+
+                <div class="mb-3">
+                    <label>Confirm Password: </label> {{form.password2}}
+                </div>
+                
+
+                <input type="submit" class="btn btn-primary btn-sm" value="Create User">
+            </form>
+
+
+
+    </div>
+
+<div class="list-div">
+
+    <h4 style="color:rgb(128, 41, 41);">Please Note : </h4>
+
+    <ul>
+
+        <li>Your password can’t be too similar to your other personal information.</li>
+        <li>Your password must contain at least 8 characters.</li>
+        <li>Your password can’t be a commonly used password.</li>  
+        <li>Your password can’t be entirely numeric</li>
+    
+    </ul>
+    
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+{% endblock %}
+

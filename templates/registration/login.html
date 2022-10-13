@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="reg-container text-center container">
+
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
+
+    <form action="" method="POST">
+    {% csrf_token %}
+
+      <div class="mb-3 mt-5 ms-5 pe-3">
+            <label class="form-label">Username :</label>
+            <input type="text" id="username" name="username">
+      </div>
+
+
+
+      <div class="mb-3 mt-2 ms-5 pe-3">
+            <label class="form-label">Password :</label>
+            <input type="password" id="password" name="password">
+      </div>
+
+
+
+
+        <button class="btn btn-success text-center mb-5 pe-4 ps-4" type="submit">Log In</button>
+    </form>
+
+    <div class="mb-3 mt-2 ms-5 pe-3">
+         <a href="{% url 'register'%}" style="color:white;">New here? Click here to register</a>
+
+    </div>
+
+
+
+</div>
+
+</body>
+</html>

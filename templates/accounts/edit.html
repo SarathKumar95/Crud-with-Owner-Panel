@@ -1,0 +1,52 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+
+
+<div class="container text-center">
+
+  
+<h3 class="mt-4 mb-3">Edit here</h3>
+  
+<form action="" method = 'POST' autocomplete="off">
+
+  {% csrf_token %}
+
+  
+  <div class="mb-3 ms-5">
+    <label>Firstname : </label> {{form.first_name}}
+  </div>
+
+  <div class="mb-3 ms-5">
+    <label>Username : </label> {{form.username}}
+  </div>
+
+  <div class="mb-3 ms-5 ps-3">
+    <label>Email Id : </label> {{form.email}}
+  </div>
+
+  
+  <div class="mb-3 ms-5 ps-2">
+    <label>Password : </label> {{form.password1}}
+  </div>
+
+  
+  <div class="mb-3">
+    <label>Confirm Password: </label> {{form.password2}}
+  </div>
+  
+  <div class="mb-3 text-center">
+    <button type="submit" class="btn btn-primary text-center">Done</button>  
+  </div>
+
+  
+  
+</form>
+
+
+
+
+</div>
+
+{% endblock %}
+ 
