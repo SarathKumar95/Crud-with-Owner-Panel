@@ -4,8 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.decorators.cache import cache_control, never_cache
-
+from django.views.decorators.cache import cache_control
 from accounts.forms import CustomUserForm
 from accounts.models import CustomUser
 
@@ -66,7 +65,7 @@ def login_view(req):
     return render(req, 'registration/login.html')
 
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def user_home(req):
     if 'customer' in req.session:
         return render(req, 'accounts/home.html')
@@ -75,7 +74,7 @@ def user_home(req):
         return redirect(login_view)
 
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def owner_home(req):
     if 'superu' in req.session:
         user = CustomUser.objects.all()
@@ -90,12 +89,8 @@ def owner_home(req):
 
 
 def sign_out(req):
-    if 'superu' in req.session:
+    if 'superu' and 'customer' in req.session:
         req.session.flush()
-
-    elif 'customer' in req.session:
-        req.session.flush()
-
     return redirect('login')
 
 
